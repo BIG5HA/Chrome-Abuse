@@ -25,8 +25,8 @@ My subsequent work involved investigating Chrome profile storage, developing and
 
 | File | Role |
 | --- | --- |
-| `preparer2.nim` | Lab orchestrator: Windows environment and privilege-context inspection, Chrome state checks, and coordination of the second executable. |
-| `chromecreds2.nim` | Browser-data research component: Chrome profile discovery, SQLite database access, legacy-format cryptography, and laboratory result handling. |
+| `preparer.nim` | Lab orchestrator: Windows environment and privilege-context inspection, Chrome state checks, and coordination of the second executable. |
+| `chromecreds.nim` | Browser-data research component: Chrome profile discovery, SQLite database access, legacy-format cryptography, and laboratory result handling. |
 
 The programs are **separately compiled Windows executables**, not two Nim modules imported into one process. In the tested design, the second executable was supplied by the lab HTTP server and executed locally under a different filename. The preparer does **not** perform process injection of this second executable. Separate DLL/IElevator research attempts took place earlier in the investigation and should not be confused with the final two-executable workflow.
 
@@ -82,16 +82,16 @@ Dependency versions and compiler/toolchain compatibility should be validated aga
 
 The two programs are built **separately**. Insert the exact build commands used for the corresponding files below.
 
-### 1. Orchestrator — `preparer2.nim`
+### 1. Orchestrator — `preparer.nim`
 
 ```powershell
-<INSERT_PREPARER2_COMPILATION_COMMAND_HERE>
+nim c -d:release preparer.nim
 ```
 
-### 2. Browser-data component — `chromecreds2.nim`
+### 2. Browser-data component — `chromecreds.nim`
 
 ```powershell
-<INSERT_CHROMECREDS2_COMPILATION_COMMAND_HERE>
+nim c -d:release --dynlibOverride:sqlite3 chromecreds.nim
 ```
 
 **Note:** Previous exploratory DLL experiments used a *different* source file and build mode. Their command is not interchangeable with the command for `chromecreds2.nim` and is intentionally not listed as part of the final two-file build.
